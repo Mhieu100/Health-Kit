@@ -1,5 +1,6 @@
 import React from "react";
-import { Image, Text, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+
 import Onboarding from "react-native-onboarding-swiper";
 
 const OnboardingScreen = ({ navigation }) => {
@@ -28,19 +29,19 @@ const OnboardingScreen = ({ navigation }) => {
       pages={[
         {
           backgroundColor: "#fff",
-          image: <Image source={require("../../assets/images/circle.png")} />,
+          image: <Image style={styles.imageOnboard} source={require("../../assets/images/onBoard-1.png")} />,
           title: "Onboarding",
           subtitle: "Done with React Native Onboarding Swiper",
         },
         {
           backgroundColor: "#fff",
-          image: <Image source={require("../../assets/images/square.png")} />,
+          image: <Image style={styles.imageOnboard} source={require("../../assets/images/onBoard-2.png")} />,
           title: "Onboarding",
           subtitle: "Done with React Native Onboarding Swiper",
         },
         {
           backgroundColor: "#fff",
-          image: <Image source={require("../../assets/images/triangle.png")} />,
+          image: <Image style={styles.imageOnboard} source={require("../../assets/images/onBoard-3.png")} />,
           title: "Onboarding",
           subtitle: "Done with React Native Onboarding Swiper",
         },
@@ -48,5 +49,12 @@ const OnboardingScreen = ({ navigation }) => {
     />
   );
 };
+
+const styles = StyleSheet.create({
+  imageOnboard: {
+    width: 400,
+    height: 250,
+  }
+});
 
 export default OnboardingScreen;
