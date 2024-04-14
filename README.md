@@ -4,7 +4,8 @@ Build Health Kit App
 
 ## Tech Stack
 
-**Server:** Node, Express, React Native, MySQL 
+**Server:** Node, Express, MySQL 
+**Client:** React Native
 
 
 ## Installation
