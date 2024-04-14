@@ -24,7 +24,7 @@ const AppStack = () => (
         ),
       }}
     />  
-     <Tab.Screen
+     {/* <Tab.Screen
       name="Tracker"
       component={TrackerSceen}
       options={{
@@ -32,7 +32,7 @@ const AppStack = () => (
           <MaterialIcons name="analytics" color={color} size={size} />
         ),
       }}
-    />
+    /> */}
      <Tab.Screen
       name="Health Info"
       component={HealthInfoScreen}
@@ -51,7 +51,7 @@ const AppStack = () => (
         ),
       }}
     />
-    <Tab.Screen
+    {/* <Tab.Screen
       name="Setting"
       component={SettingScreen}
       options={{
@@ -59,7 +59,7 @@ const AppStack = () => (
           <MaterialIcons name="settings" color={color} size={size} />
         ),
       }}
-    />
+    /> */}
   </Tab.Navigator>
 );
 

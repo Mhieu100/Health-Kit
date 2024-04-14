@@ -9,7 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 const DATA = [
   {
@@ -62,7 +62,7 @@ const Item = ({ title }) => (
       <View
         style={{ flex: 1, alignItems: "flex-end", justifyContent: "center" }}
       >
-        <MaterialIcons name="arrow-right" color={"black"} size={30} />
+        <AntDesign name="right" color={"black"} size={15} />
       </View>
     </TouchableOpacity>
   </View>

@@ -8,30 +8,31 @@ const features = [
     description:
       "Blood pressure is the force of blood pushing against the walls of the arteries as the heart pumps blood.",
     uri: "https://news.olemiss.edu/wp-content/uploads/2019/02/UCIMG-711-2048x1150.jpg",
-    navigate: "BloodPressure"
+    navigate: "BloodPressure",
   },
   {
     title: "Blood Sugar (Glucose)",
     description:
       "Blood sugar, or glucose, is the primary sugar found in the blood and is the body's main source of energy.",
     uri: "https://niemagazine.com/wp-content/uploads/2017/11/blood-sugar.jpg",
-    navigate: "BloodSugar"
+    navigate: "BloodSugar",
   },
   {
     title: "BMI (Body Mass Index)",
     description:
       "BMI is a measure of body fat based on height and weight that applies to adult men and women.",
     uri: "https://winsorfit.com/wp-content/uploads/2020/02/bmi-vs-bmr.jpg",
-    navigate: "BMI"
+    navigate: "BMI",
+    style: { marginBottom: 10 },
   },
 ];
 
 const HomeSceen = ({ navigation }) => {
   return (
-    <ScrollView style={{ backgroundColor: "#ECF0F3", marginBottom: 10 }}>
-      <View>
-        {features.map((feature, index) => (
-          <Card key={index}>
+    <ScrollView style={{ backgroundColor: "#ECF0F3" }}>
+      {features.map((feature, index) => (
+        <View style={feature.style} key={index}>
+          <Card >
             <Card.Title>{feature.title}</Card.Title>
             <Card.Divider />
             <Card.Image
@@ -63,8 +64,8 @@ const HomeSceen = ({ navigation }) => {
               title="Health Check"
             />
           </Card>
-        ))}
-      </View>
+        </View>
+      ))}
     </ScrollView>
   );
 };

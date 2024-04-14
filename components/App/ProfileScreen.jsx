@@ -2,13 +2,20 @@ import { Button } from "@rneui/base";
 import { useState } from "react";
 import { FlatList, ScrollView, TouchableOpacity } from "react-native";
 import { View, Text, StyleSheet } from "react-native";
+import { useAuth } from "../../context/AuthContext";
 
 const ProfileScreen = () => {
-  const [data, setData] = useState([
+  const data = [
     { category: "Blood Pressure", value: 1000 },
     { category: "Blood Sugar", value: 500 },
     { category: "Body Mass Index", value: 3300 },
-  ]);
+  ];
+
+  const { logout ,user } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   const StatItem = ({ item }) => (
     <View style={styles.statItem}>
@@ -19,7 +26,7 @@ const ProfileScreen = () => {
   return (
     
       <View style={styles.container}>
-        {/* <ScrollView> */}
+        
         <View style={styles.body}>
           <View style={styles.avatarContainer}>
             <Text style={styles.avatar}>RN</Text>
@@ -44,7 +51,7 @@ const ProfileScreen = () => {
             <Text style={styles.infoText}>https://yourportfolio.com</Text>
           </View> */}
           <View style={styles.infoContainer}>
-            <Button>Edit Profile</Button>
+            <Button onPress={handleLogout}>Logout</Button>
           </View>
         </View>
         <View style={styles.statsCard}>
@@ -56,7 +63,7 @@ const ProfileScreen = () => {
             numColumns={2}
           />
         </View>
-        {/* </ScrollView> */}
+      
       </View>
    
   );
@@ -101,7 +108,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    
     marginTop: 12,
   },
   infoLabel: {

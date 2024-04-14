@@ -12,11 +12,17 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginScreen = ({ navigation }) => {
+  
+  const { login } = useAuth();
+  const handleLogin = () => {
+    login('user@example.com', 'password');
+  };
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -69,7 +75,7 @@ const LoginScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
