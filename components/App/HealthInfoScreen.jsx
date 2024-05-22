@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -6,56 +6,23 @@ import {
   StyleSheet,
   Text,
   Image,
-  ScrollView,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { truncateText } from "../util/text";
+import { useFocusEffect } from "@react-navigation/native";
+import * as postService from "../../services/post.service";
 
-const DATA = [
-  {
-    id: "1",
-    title: "Understanding Blood Pressure: What Is Normal? ",
-  },
-  {
-    id: "2",
-    title: "Stress and High Blood Pressure: What’s the Connection?",
-  },
-  {
-    id: "3",
-    title: "Understanding Blood Pressure: What Is Normal? ",
-  },
-  {
-    id: "4",
-    title: "Stress and High Blood Pressure: What’s the Connection?",
-  },
-  {
-    id: "5",
-    title: "Understanding Blood Pressure: What Is Normal? ",
-  },
-  {
-    id: "6",
-    title: "Stress and High Blood Pressure: What’s the Connection?",
-  },
-  {
-    id: "7",
-    title: "Understanding Blood Pressure: What Is Normal? ",
-  },
-  {
-    id: "8",
-    title: "Stress and High Blood Pressure: What’s the Connection?",
-  },
-];
-
-function truncateText(text, maxLength) {
-  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
-}
-const Item = ({ title }) => (
-  <View>
-    <TouchableOpacity style={styles.item} onPress={() => {}}>
-      <Image
-        style={styles.tinyLogo}
-        source={require("../../assets/images/blood.png")}
-      />
+const Item = ({ id, title, icon, navigation }) => (
+  <View style={{ marginBottom: 10 }}>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => {
+        navigation.navigate("Detail Post", { id });
+      }}
+    >
+      <Image style={styles.tinyLogo} source={{ uri: icon }} borderRadius={5} />
       <View style={{ flex: 4, paddingLeft: 20 }}>
         <Text style={styles.title}>{truncateText(title, 38)}</Text>
       </View>
@@ -68,25 +35,70 @@ const Item = ({ title }) => (
   </View>
 );
 
-const HealthInfoSceen = () => {
+const HealthInfoSceen = ({ navigation }) => {
+  const [posts, setPost] = React.useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const response = await postService.getAllPost();
+          setPost(response.post);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();
+    }, [])
+  );
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const filteredData = posts.filter((post) =>
+    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const DATA = filteredData.map((item) => ({
+    id: item.id,
+    title: item.title,
+    icon: item.icon,
+  }));
+
+  console.log(DATA);
+  console.log(searchQuery);
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ height: 40, marginVertical: 10 }}>
-        <ScrollView horizontal>
-          <TouchableOpacity style={styles.tab}>
-            <Text style={styles.title}>Blood Pressure</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.tab}>
-            <Text style={styles.title}>Blood Sugar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.tab}>
-            <Text style={styles.title}>Health Rate</Text>
-          </TouchableOpacity>
-        </ScrollView>
+      <View style={styles.formContent}>
+        <View style={styles.inputContainer}>
+          <Image
+            style={[styles.icon, styles.inputIcon]}
+            source={{
+              uri: "https://img.icons8.com/color/70/000000/search.png",
+            }}
+          />
+          <TextInput
+            style={styles.inputs}
+            placeholder="Search..."
+            underlineColorAndroid="transparent"
+            onChangeText={handleSearch}
+            value={searchQuery}
+          />
+        </View>
       </View>
+
       <FlatList
         data={DATA}
-        renderItem={({ item }) => <Item title={item.title} />}
+        renderItem={({ item }) => (
+          <Item
+            navigation={navigation}
+            title={item.title}
+            icon={item.icon}
+            id={item.id}
+          />
+        )}
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
@@ -120,6 +132,38 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginLeft: 16,
+  },
+  formContent: {
+    flexDirection: "row",
+    marginTop: 10,
+  },
+  inputContainer: {
+    borderBottomColor: "#F5FCFF",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 30,
+    borderBottomWidth: 1,
+    height: 45,
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    margin: 10,
+  },
+  icon: {
+    width: 30,
+    height: 30,
+  },
+  iconBtnSearch: {
+    alignSelf: "center",
+  },
+  inputs: {
+    height: 45,
+    marginLeft: 16,
+    borderBottomColor: "#FFFFFF",
+    flex: 1,
+  },
+  inputIcon: {
+    marginLeft: 15,
+    justifyContent: "center",
   },
 });
 

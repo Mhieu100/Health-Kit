@@ -13,81 +13,100 @@ import {
 } from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useAuth } from "../../context/AuthContext";
+import * as authService from "../../services/auth.service";
+import LoadingScreen from "../LoadingScreen ";
 
 const LoginScreen = ({ navigation }) => {
-  
-  const { login } = useAuth();
-  const handleLogin = () => {
-    login('user@example.com', 'password');
-  };
-
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin@gmail.com");
+  const [password, setPassword] = useState("20112003");
+  const [isLoading, setIsLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
-
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
+  const { login } = useAuth();
+
+  const handleLogin = () => {
+    setIsLoading(true);
+    const payload = {
+      email,
+      password,
+    };
+    setTimeout(async () => {
+      try {
+        const apiRes = await authService.login(payload);
+        login(apiRes.user);
+      } catch (err) {
+        console.log(err);
+      }
+      setIsLoading(false);
+    }, 1500);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Healthy Care</Text>
-
-      <Image
-        source={require("../../assets/images/logo.png")}
-        style={styles.logoIcon}
-      />
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setPhoneNumber}
-          value={phoneNumber}
-          placeholder="Phone number"
-          keyboardType="phone-pad"
-        />
-
-        <Ionicons
-          name="call-outline"
-          size={24}
-          color="grey"
-          style={styles.phoneIcon}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setPassword}
-          value={password}
-          placeholder="Password"
-          secureTextEntry={!passwordVisible}
-        />
-        <TouchableOpacity
-          onPress={togglePasswordVisibility}
-          style={styles.eyeIcon}
-        >
-          <Ionicons
-            name={passwordVisible ? "eye-outline" : "eye-off-outline"}
-            size={24}
-            color="grey"
+    <>
+      {isLoading ? (
+        <LoadingScreen /> 
+      ) : (
+        <View style={styles.container}>
+          <Text style={styles.title}>Welcome to Healthy Care</Text>
+          <Image
+            source={require("../../assets/images/logo.png")}
+            style={styles.logoIcon}
           />
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setEmail}
+              value={email}
+              placeholder="Email Address"
+            />
 
-      <Text style={styles.forgotPassword}>I forgot my password</Text>
+            <Ionicons
+              name="mail-outline"
+              size={24}
+              color="grey"
+              style={styles.mailIcon}
+            />
+          </View>
 
-      <View style={styles.signupContainer}>
-        <Text>No account ?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-          <Text style={styles.signupText}>Register now</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setPassword}
+              value={password}
+              placeholder="Password"
+              secureTextEntry={!passwordVisible}
+            />
+            <TouchableOpacity
+              onPress={togglePasswordVisibility}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={passwordVisible ? "eye-outline" : "eye-off-outline"}
+                size={24}
+                color="grey"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          
+          <Text style={styles.forgotPassword}>I forgot my password</Text>
+
+          <View style={styles.signupContainer}>
+            <Text>No account ?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+              <Text style={styles.signupText}>Register now</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+    </>
   );
 };
 
@@ -122,7 +141,7 @@ const styles = StyleSheet.create({
     padding: wp("3%"),
     alignItems: "center",
     marginTop: hp("2.5%"),
-    width: '100%',
+    width: "100%",
   },
   buttonText: {
     color: "#fff",
@@ -168,7 +187,7 @@ const styles = StyleSheet.create({
     right: wp("2.5%"),
     padding: wp("2.5%"),
   },
-  phoneIcon: {
+  mailIcon: {
     position: "absolute",
     right: wp("2.5%"),
     padding: wp("2.5%"),

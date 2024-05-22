@@ -5,18 +5,10 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
 
-  const login = (email, password) => {
-    // Here you would typically perform authentication, like calling an API
-    // For demonstration purposes, let's just set the user directly
-    setUser({ email, password });
-  };
-
-  const register = (email, password) => {
-    // Here you would typically perform registration, like calling an API
-    // For demonstration purposes, let's just set the user directly
-    setUser({ email, password });
+  const login = (user) => {
+    setUser(user);
   };
 
   const logout = () => {
@@ -24,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

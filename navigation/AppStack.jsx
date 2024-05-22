@@ -10,11 +10,11 @@ import ProfileScreen from "../components/App/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
-
-
-
 const AppStack = () => (
-  <Tab.Navigator>
+  <Tab.Navigator
+  screenOptions={{
+    headerShown: false, // This will hide the header for all screens in this navigator
+  }}>
     <Tab.Screen
       name="Home"
       component={HomeScreen}
@@ -24,7 +24,7 @@ const AppStack = () => (
         ),
       }}
     />  
-     {/* <Tab.Screen
+     <Tab.Screen
       name="Tracker"
       component={TrackerSceen}
       options={{
@@ -32,7 +32,7 @@ const AppStack = () => (
           <MaterialIcons name="analytics" color={color} size={size} />
         ),
       }}
-    /> */}
+    />
      <Tab.Screen
       name="Health Info"
       component={HealthInfoScreen}

@@ -28,11 +28,12 @@ const features = [
 ];
 
 const HomeSceen = ({ navigation }) => {
+
   return (
     <ScrollView style={{ backgroundColor: "#ECF0F3" }}>
       {features.map((feature, index) => (
         <View style={feature.style} key={index}>
-          <Card >
+          <Card>
             <Card.Title>{feature.title}</Card.Title>
             <Card.Divider />
             <Card.Image

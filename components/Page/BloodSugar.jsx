@@ -1,144 +1,291 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, Alert } from 'react-native'
-import React, { useState } from 'react'
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
+import * as healthyService from "../../services/healthy.service";
+import React, { useEffect, useState } from "react";
+import DatePicker from "react-native-modern-datepicker";
+import formattedDate from "../util/date";
+import { Button } from "react-native-elements";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { Dialog } from "@rneui/themed";
+import { Table, Rows, Col, TableWrapper } from "react-native-table-component";
+import { useAuth } from "../../context/AuthContext";
 
-const BloodSugar = () => {
-    const data = [
-        {
-          id: 1,
-          name: 'Comunity',
-          image: 'https://img.icons8.com/clouds/100/000000/groups.png',
-          count: 124.711,
-        },
-        {
-          id: 2,
-          name: 'Housing',
-          image: 'https://img.icons8.com/color/100/000000/real-estate.png',
-          count: 234.722,
-        },
-        {
-          id: 3,
-          name: 'Jobs',
-          image: 'https://img.icons8.com/color/100/000000/find-matching-job.png',
-          count: 324.723,
-        },
-        {
-          id: 4,
-          name: 'Personal',
-          image: 'https://img.icons8.com/clouds/100/000000/employee-card.png',
-          count: 154.573,
-        },
-        {
-          id: 5,
-          name: 'For sale',
-          image: 'https://img.icons8.com/color/100/000000/land-sales.png',
-          count: 124.678,
-        },
-      ]
+const BloodSugar = ({navigation}) => {
+  const conditions = [
+    "Before Excercise",
+    "After Excercise",
+    "Before A Meal",
+    "After A Meal",
+    "Fasting",
+    "Default",
+    "Asleep",
+  ];
 
-      const [options, setOptions] = useState(data)
-      const clickEventListener = item => {
-        Alert.alert('Message', 'Item clicked. ' + item.name)
-      }
+  const [visible, setVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [value, setValue] = useState("80.0");
+  const [unit, setUnit] = useState("mg/dL");
+  const [result, setResult] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [condition, setCondition] = useState("Asleep");
+
+  const toggleDialogResult = () => {
+    setVisible(!visible);
+  };
+
+  const tableTitle = ["Conditon", "Value", "Unit", "Result", "Date"];
+  const tableData = [[condition], [value], [unit], [result], [selectedDate]];
+
+  const convertUnit = () => {
+    if (unit === "mg/dL") {
+      const newValue = (parseFloat(value) / 18).toFixed(2); // mg/dL to mmol/L
+      setValue(newValue);
+      setUnit("mmol/L");
+    } else {
+      const newValue = (parseFloat(value) * 18).toFixed(2); // mmol/L to mg/dL
+      setValue(newValue);
+      setUnit("mg/dL");
+    }
+  };
+
+  const { user } = useAuth();
+
+  const addBloodSugar = async () => {
+    const payload = {
+      fettle: condition,
+      unit: unit,
+      value: value,
+      dateCheck: selectedDate,
+      result: result,
+      user_id: user.id,
+    };
+    console.log(payload);
+    try {
+      await healthyService.addBloodSugar(payload);
+      navigation.navigate("Home");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (value < 72.0 && unit == "mg/dL") {
+      setResult("Low");
+    } else if (72.0 <= value && value <= 99.0 && unit == "mg/dL") {
+      setResult("Normal");
+    } else if (99.0 < value && value < 126.0 && unit == "mg/dL") {
+      setResult("Pre-diabetes");
+    } else if (value >= 126.0 && unit == "mg/dL") {
+      setResult("Diabetes");
+    } else if (value < 4.0 && unit == "mmol/L") {
+      setResult("Low");
+    } else if (4.0 <= value && value <= 5.5 && unit == "mmol/L") {
+      setResult("Normal");
+    } else if (5.5 < value && value < 7.0 && unit == "mmol/L") {
+      setResult("Pre-diabetes");
+    } else if (value >= 7.0 && unit == "mmol/L") {
+      setResult("Diabetes");
+    }
+  }, [value, unit]);
+
   return (
-    <View style={styles.container}>
-    <FlatList
-      style={styles.contentList}
-      columnWrapperStyle={styles.listContainer}
-      data={options}
-      keyExtractor={item => {
-        return item.id
-      }}
-      renderItem={({ item }) => {
-        return (
-          <TouchableOpacity style={styles.card} onPress={() => clickEventListener(item)}>
-            <Image style={styles.image} source={{ uri: item.image }} />
-            <View style={styles.cardContent}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.count}>{item.count}</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.readingContainer}>
+          <TextInput
+            style={styles.readingText}
+            keyboardType="numeric"
+            value={value}
+            onChangeText={setValue}
+          />
+          <Text style={styles.unitText}>{unit}</Text>
+        </View>
+        <Button title="Convert Unit" onPress={convertUnit} />
+
+        <TouchableOpacity
+          style={styles.dropdown}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.dropdownText}>{condition}</Text>
+          <Ionicons
+            name="caret-down-outline"
+            size={24}
+            color="grey"
+            style={styles.phoneIcon}
+          />
+        </TouchableOpacity>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Condition</Text>
+            {conditions.map((index) => (
               <TouchableOpacity
-                style={styles.followButton}
-                onPress={() => clickEventListener(item)}>
-                <Text style={styles.followButtonText}>Explore now</Text>
+                style={styles.modalItem}
+                onPress={() => {
+                  setCondition(`${index}`);
+                  setModalVisible(false);
+                }}
+              >
+                <Text style={{ textAlign: "center" }}>{index}</Text>
               </TouchableOpacity>
+            ))}
+            <View style={styles.modalActions}>
+              <Button title="Cancel" onPress={() => setModalVisible(false)} />
             </View>
-          </TouchableOpacity>
-        )
-      }}
-    />
-  </View>
-  )
-}
+          </View>
+        </Modal>
+      </View>
 
-export default BloodSugar
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          textAlign: "center",
+          margin: 10,
+        }}
+      >
+        Select Date Check
+      </Text>
+      <DatePicker
+        selected={formattedDate}
+        current={formattedDate}
+        onSelectedChange={(date) => setSelectedDate(date)}
+      />
 
+      <View style={{ margin: 12 }}>
+        <Button title={"Submit"} onPress={toggleDialogResult} />
+      </View>
+
+      <Dialog isVisible={visible}>
+        <Dialog.Title
+          titleStyle={{ textAlign: "center", fontSize: 15 }}
+          title="Result Blood Sugar"
+        />
+        <View style={styles.container_table}>
+          <Table borderStyle={{ borderWidth: 1 }}>
+            <TableWrapper style={styles.wrapper}>
+              <Col
+                data={tableTitle}
+                style={styles.title}
+                heightArr={[28, 28]}
+                textStyle={styles.text}
+              />
+
+              <Rows
+                data={tableData}
+                flexArr={[0, 1, 1]}
+                style={styles.row}
+                textStyle={styles.text}
+              />
+            </TableWrapper>
+          </Table>
+        </View>
+        <View style={{ marginTop: 10 }}>
+          <Button
+            title={"Save"}
+            style={{ borderRadius: 6 }}
+            onPress={addBloodSugar}
+          />
+        </View>
+      </Dialog>
+    </ScrollView>
+  );
+};
+
+export default BloodSugar;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#ebf0f7',
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
+    marginHorizontal: 18,
+    marginVertical: 10,
+  },
+  readingContainer: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 20,
+    flexDirection: "row",
+  },
+  readingText: {
+    fontSize: 48,
+    fontWeight: "bold",
+    textAlign: "center",
+    flex: 1,
+  },
+  unitText: {
+    fontSize: 18,
+    color: "#888",
+    marginLeft: 10,
+  },
+  dropdown: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 16,
+    width: "90%",
+  },
+  dropdownText: {
+    fontSize: 18,
+  },
+  modalView: {
+    marginTop: "auto",
+    backgroundColor: "white",
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    contentList: {
-      flex: 1,
-    },
-    cardContent: {
-      marginLeft: 20,
-      marginTop: 10,
-    },
-    image: {
-      width: 90,
-      height: 90,
-      borderRadius: 45,
-      borderWidth: 2,
-      borderColor: '#ebf0f7',
-    },
-  
-    card: {
-      shadowColor: '#00000021',
-      shadowOffset: {
-        width: 0,
-        height: 6,
-      },
-      shadowOpacity: 0.37,
-      shadowRadius: 7.49,
-      elevation: 12,
-  
-      marginLeft: 20,
-      marginRight: 20,
-      marginTop: 20,
-      backgroundColor: 'white',
-      padding: 10,
-      flexDirection: 'row',
-      borderRadius: 30,
-    },
-  
-    name: {
-      fontSize: 18,
-      flex: 1,
-      alignSelf: 'center',
-      color: '#3399ff',
-      fontWeight: 'bold',
-    },
-    count: {
-      fontSize: 14,
-      flex: 1,
-      alignSelf: 'center',
-      color: '#6666ff',
-    },
-    followButton: {
-      marginTop: 10,
-      height: 35,
-      width: 100,
-      padding: 10,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 30,
-      backgroundColor: 'white',
-      borderWidth: 1,
-      borderColor: '#dcdcdc',
-    },
-    followButtonText: {
-      color: '#dcdcdc',
-      fontSize: 12,
-    },
-  })
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontWeight: "bold",
+    fontSize: 24,
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  modalItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+  },
+  phoneIcon: {
+    marginLeft: 10,
+  },
+  container_table: { backgroundColor: "#fff" },
+  wrapper: { flexDirection: "row" },
+  title: { flex: 1, backgroundColor: "#f6f8fa" },
+  row: { height: 28 },
+  text: { textAlign: "center" },
+});

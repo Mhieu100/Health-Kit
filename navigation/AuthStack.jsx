@@ -5,7 +5,10 @@ import SignUpScreen from "../components/Auth/SignUpScreen";
 
 const Stack = createNativeStackNavigator();
 const AuthStack = () => (
-  <Stack.Navigator>
+  <Stack.Navigator 
+  screenOptions={{
+    headerShown: false, // This will hide the header for all screens in this navigator
+  }}>
     <Stack.Screen
       name="Onboarding"
       component={OnboardingScreen}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -12,74 +12,152 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import * as authService from "../../services/auth.service";
+import LoadingScreen from "../LoadingScreen ";
 
-const SignUpScreen = ({navigation}) => {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-
+const SignUpScreen = ({ navigation }) => {
+  const [name, setName] = useState("Nguyen Toan");
+  const [email, setEmail] = useState("toancong@gmail.com");
+  const [city, setCity] = useState("Ha Noi");
+  const [country, setCountry] = useState("Viet Nam");
+  const [password, setPassword] = useState("20112003");
+  const [isLoading, setIsLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const handleRegiter = () => {
+    setIsLoading(true);
+    const payload = {
+      email: email,
+      password: password,
+      city: city,
+      country: country,
+      name: name,
+    };
+    setTimeout(async () => {
+      try {
+        await authService.register(payload);
+        navigation.navigate("Login");
+      } catch (err) {
+        console.log(err);
+      }
+      setIsLoading(false);
+    }, 1500);
+  };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Healthy Care</Text>
+    <>
+      {isLoading ? (
+        <LoadingScreen /> 
+      ) : (
+        <View style={styles.container}>
+          <Text style={styles.title}>Welcome to Healthy Care</Text>
 
-      <Image
-        source={require("../../assets/images/logo.png")}
-        style={styles.logoIcon}
-      />
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setPhoneNumber}
-          value={phoneNumber}
-          placeholder="Phone number"
-          keyboardType="phone-pad"
-        />
-
-        <Ionicons
-          name="call-outline"
-          size={24}
-          color="grey"
-          style={styles.phoneIcon}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setPassword}
-          value={password}
-          placeholder="Password"
-          secureTextEntry={!passwordVisible}
-        />
-        <TouchableOpacity
-          onPress={togglePasswordVisibility}
-          style={styles.eyeIcon}
-        >
-          <Ionicons
-            name={passwordVisible ? "eye-outline" : "eye-off-outline"}
-            size={24}
-            color="grey"
+          <Image
+            source={require("../../assets/images/logo.png")}
+            style={styles.logoIcon}
           />
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setName}
+              value={name}
+              placeholder="Full Name"
+            />
 
-      <View style={styles.signupContainer}>
-        <Text>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.signupText}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <Ionicons
+              name="people-outline"
+              size={24}
+              color="grey"
+              style={styles.phoneIcon}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setEmail}
+              value={email}
+              placeholder="Email Address"
+            />
+
+            <Ionicons
+              name="mail-outline"
+              size={24}
+              color="grey"
+              style={styles.phoneIcon}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setCountry}
+              value={country}
+              placeholder="Country"
+            />
+
+            <Ionicons
+              name="location-outline"
+              size={24}
+              color="grey"
+              style={styles.phoneIcon}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setCity}
+              value={city}
+              placeholder="City"
+            />
+
+            <Ionicons
+              name="map-outline"
+              size={24}
+              color="grey"
+              style={styles.phoneIcon}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setPassword}
+              value={password}
+              placeholder="Password"
+              secureTextEntry={!passwordVisible}
+            />
+            <TouchableOpacity
+              onPress={togglePasswordVisibility}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={passwordVisible ? "eye-outline" : "eye-off-outline"}
+                size={24}
+                color="grey"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity style={styles.button} onPress={handleRegiter}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+
+          <View style={styles.signupContainer}>
+            <Text>Already have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.signupText}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+    </>
   );
 };
 
@@ -114,7 +192,7 @@ const styles = StyleSheet.create({
     padding: wp("3%"),
     alignItems: "center",
     marginTop: hp("2.5%"),
-    width: '100%',
+    width: "100%",
   },
   buttonText: {
     color: "#fff",
