@@ -5,9 +5,9 @@ import AuthStack from "./AuthStack";
 import MainStack from "./MainStack";
 import { useAuth } from "../context/AuthContext";
 const AppContent = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
-  // const user = { name: "John" };
+  const user = { name: "John" };
   return (
     <NavigationContainer>
       {user ? <MainStack /> : <AuthStack />}
