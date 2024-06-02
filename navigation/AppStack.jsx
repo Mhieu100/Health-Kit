@@ -7,14 +7,15 @@ import SettingScreen from "../components/App/SettingScreen";
 import HealthInfoScreen from "../components/App/HealthInfoScreen";
 import TrackerSceen from "../components/App/TrackerScreen";
 import ProfileScreen from "../components/App/ProfileScreen";
-
+import ChatBot from "../components/Chat_bot";
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => (
   <Tab.Navigator
-  screenOptions={{
-    headerShown: false, // This will hide the header for all screens in this navigator
-  }}>
+    screenOptions={{
+      headerShown: false, // This will hide the header for all screens in this navigator
+    }}
+  >
     <Tab.Screen
       name="Home"
       component={HomeScreen}
@@ -23,17 +24,27 @@ const AppStack = () => (
           <MaterialIcons name="home" color={color} size={size} />
         ),
       }}
-    />  
-     <Tab.Screen
+    />
+    <Tab.Screen
       name="Tracker"
-      component={TrackerSceen}
+      // component={TrackerSceen}
+      component={ChatBot}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialIcons name="analytics" color={color} size={size} />
         ),
       }}
     />
-     <Tab.Screen
+    <Tab.Screen
+      name="Chat"
+      component={ChatBot}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="comment" color={color} size={size} />
+        ),
+      }}
+    />
+    <Tab.Screen
       name="Health Info"
       component={HealthInfoScreen}
       options={{
@@ -42,7 +53,7 @@ const AppStack = () => (
         ),
       }}
     />
-     <Tab.Screen
+    <Tab.Screen
       name="Profile"
       component={ProfileScreen}
       options={{
@@ -51,6 +62,7 @@ const AppStack = () => (
         ),
       }}
     />
+
     {/* <Tab.Screen
       name="Setting"
       component={SettingScreen}
