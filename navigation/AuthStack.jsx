@@ -3,6 +3,7 @@ import OnboardingScreen from "../components/Auth/OnboardingScreen";
 import LoginScreen from "../components/Auth/LoginScreen";
 import SignUpScreen from "../components/Auth/SignUpScreen";
 import FaceId from "../components/face_id/login";
+import FaceId_SignUp from "../components/face_id/signup";
 
 const Stack = createNativeStackNavigator();
 const AuthStack = () => (
@@ -30,6 +31,11 @@ const AuthStack = () => (
       name="FaceId"
       component={FaceId}
       options={{ title: "FaceId" }}
+    />
+    <Stack.Screen
+      name="FaceId_SignUp"
+      component={FaceId_SignUp}
+      options={{ title: "FaceId_SignUp" }}
     />
   </Stack.Navigator>
 );

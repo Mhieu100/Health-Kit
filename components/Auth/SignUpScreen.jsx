@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -14,8 +15,12 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as authService from "../../services/auth.service";
 import LoadingScreen from "../LoadingScreen ";
+import axios from "axios";
+import { inlineStyles } from "react-native-svg";
+// import { green } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+// Alert
 
-const SignUpScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation, route }) => {
   const [name, setName] = useState("Nguyen Toan");
   const [email, setEmail] = useState("toancong@gmail.com");
   const [city, setCity] = useState("Ha Noi");
@@ -23,8 +28,15 @@ const SignUpScreen = ({ navigation }) => {
   const [password, setPassword] = useState("20112003");
   const [isLoading, setIsLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [faceImageUri, setFaceImageUri] = useState("");
 
   const handleRegiter = () => {
+    setIsLoading(true);
+    if (!faceImageUri) {
+      Alert.alert("Error", "Please capture your face image.");
+      return;
+    }
+
     setIsLoading(true);
     const payload = {
       email: email,
@@ -33,10 +45,37 @@ const SignUpScreen = ({ navigation }) => {
       country: country,
       name: name,
     };
+
+    // Create FormData object
+    const formData = new FormData();
+    for (const key in payload) {
+      formData.append(key, payload[key]);
+    }
+
+    // Append the captured face image
+    formData.append("face_image", {
+      uri: faceImageUri,
+      type: "image/jpeg",
+      name: "faceImage.jpg",
+    });
+
     setTimeout(async () => {
       try {
-        await authService.register(payload);
-        navigation.navigate("Login");
+        const response = await axios.post(
+          "https://4d79-171-225-185-35.ngrok-free.app/api/face-id/register/", // Replace with your API endpoint
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.status === 201) {
+          Alert.alert("Success", "Registration successful!");
+          navigation.navigate("Login");
+        } else {
+          Alert.alert("Error", "Registration failed.");
+        }
       } catch (err) {
         console.log(err);
       }
@@ -44,22 +83,35 @@ const SignUpScreen = ({ navigation }) => {
     }, 1500);
   };
 
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+  useEffect(() => {
+    if (route.params?.photoUri) {
+      setFaceImageUri(route.params.photoUri);
+    }
+    if (faceImageUri) {
+
+    }
+  }, [route.params?.photoUri]);
 
   return (
     <>
       {isLoading ? (
-        <LoadingScreen /> 
+        <LoadingScreen />
       ) : (
         <View style={styles.container}>
           <Text style={styles.title}>Welcome to Healthy Care</Text>
 
-          <Image
-            source={require("../../assets/images/logo.png")}
-            style={styles.logoIcon}
-          />
+          {!faceImageUri ? (
+            <Image
+              source={require("../../assets/images/logo.png")}
+              style={styles.logoIcon}
+            />
+          ) : (
+            <Image source={{ uri: faceImageUri }} style={styles.faceImage} />
+          )}
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -144,6 +196,26 @@ const SignUpScreen = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
+
+          {!faceImageUri ? (
+            <View style={styles.inputContainer}>
+              <TouchableOpacity
+                style={styles.faceIdButton}
+                onPress={() => navigation.navigate("FaceId_SignUp")}
+              >
+                <Text style={styles.faceIdText}>Register with Face ID</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ color: "green" }}>Authenticated Face </Text>
+              <Ionicons name={"checkmark"} size={24} color="green" />
+            </View>
+          )}
+
+          {/* {faceImageUri && (
+            <Image source={{ uri: faceImageUri }} style={styles.faceImage} />
+          )} */}
 
           <TouchableOpacity style={styles.button} onPress={handleRegiter}>
             <Text style={styles.buttonText}>Register</Text>
@@ -237,6 +309,25 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: wp("2.5%"),
     padding: wp("2.5%"),
+  },
+  faceIdButton: {
+    backgroundColor: "#01a5fc",
+    borderRadius: 25,
+    padding: wp("3%"),
+    alignItems: "center",
+    marginTop: hp("2.5%"),
+    width: "100%",
+  },
+  faceIdText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: wp("4%"),
+  },
+  faceImage: {
+    width: wp("30%"),
+    height: wp("30%"),
+    // marginTop: hp("2%"),
+    borderRadius: 150,
   },
 });
 
