@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-
+import { chatbot } from "../../services/chatbot";
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,6 +82,7 @@ const ChatBot = () => {
       ];
 
       // if message contains keywords, fetch data
+      // const response = await chatbot(updatedChat);
       const response = await axios.post(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
         {

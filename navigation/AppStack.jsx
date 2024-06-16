@@ -8,6 +8,8 @@ import HealthInfoScreen from "../components/App/HealthInfoScreen";
 import TrackerSceen from "../components/App/TrackerScreen";
 import ProfileScreen from "../components/App/ProfileScreen";
 import ChatBot from "../components/Chat_bot";
+import LoginFaceId from './../components/face_id/login';
+import FaceId from "./../components/face_id/login";
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => (
@@ -19,6 +21,15 @@ const AppStack = () => (
     <Tab.Screen
       name="Home"
       component={HomeScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="home" color={color} size={size} />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Face_id"
+      component={FaceId}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialIcons name="home" color={color} size={size} />

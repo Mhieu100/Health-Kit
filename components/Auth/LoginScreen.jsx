@@ -44,10 +44,15 @@ const LoginScreen = ({ navigation }) => {
     }, 1500);
   };
 
+  const handleFaceIDLogin = () => {
+    // Implement Face ID login functionality here
+    console.log("Face ID Login Pressed");
+  };
+
   return (
     <>
       {isLoading ? (
-        <LoadingScreen /> 
+        <LoadingScreen />
       ) : (
         <View style={styles.container}>
           <Text style={styles.title}>Welcome to Healthy Care</Text>
@@ -95,7 +100,14 @@ const LoginScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-          
+
+          <TouchableOpacity
+            style={styles.faceIdButton}
+            onPress={() => navigation.navigate("FaceId")}
+          >
+            <Text style={styles.buttonText}>Face ID</Text>
+          </TouchableOpacity>
+
           <Text style={styles.forgotPassword}>I forgot my password</Text>
 
           <View style={styles.signupContainer}>
@@ -136,6 +148,14 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   button: {
+    backgroundColor: "#01a5fc",
+    borderRadius: 25,
+    padding: wp("3%"),
+    alignItems: "center",
+    marginTop: hp("2.5%"),
+    width: "100%",
+  },
+  faceIdButton: {
     backgroundColor: "#01a5fc",
     borderRadius: 25,
     padding: wp("3%"),
