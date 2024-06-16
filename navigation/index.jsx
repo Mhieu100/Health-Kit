@@ -8,6 +8,7 @@ const AppContent = () => {
   const { user } = useAuth();
 
   // const user = { name: "John" };
+  
   return (
     <NavigationContainer>
       {user ? <MainStack /> : <AuthStack />}

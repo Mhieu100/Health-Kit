@@ -7,7 +7,7 @@ const RadioButton = ({ label, selected, onSelect, color }) => {
     <TouchableOpacity
       style={[
         styles.radioButton,
-        { backgroundColor: selected ? "#9933f0" : "#FFF" },
+        { backgroundColor: selected ? "#999999" : "#FFF" },
       ]}
       onPress={onSelect}
     >

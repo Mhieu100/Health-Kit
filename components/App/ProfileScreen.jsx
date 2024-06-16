@@ -4,7 +4,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import * as healthyService from "../../services/healthy.service";
 import { useAuth } from "../../context/AuthContext";
 import { useCallback, useState } from "react";
-import LoadingScreen from "../LoadingScreen ";
+import LoadingScreen from "../customize/LoadingScreen ";
 import { useFocusEffect } from "@react-navigation/native";
 import { formatDate, formatDatePost } from "../util/date";
 import  IP_Address  from "../util/network";
@@ -57,7 +57,8 @@ const ProfileScreen = ({ navigation }) => {
               <Image
                 style={styles.avatar}
                 source={{
-                  uri: `http://${IP_Address}:4000/uploads/${user.photo}`,
+                  // uri: `http://${IP_Address}:4000/uploads/${user.photo}`,
+                  uri: 'https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png'
                 }}
               />
             </View>

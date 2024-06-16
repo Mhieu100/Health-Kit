@@ -3,7 +3,7 @@ import axios from "axios";
 // import IP_Address from "../components/util/network"
 // const apiUrl = `http://${IP_Address}:4000`;
 
-const apiUrl = `https://4d79-171-225-185-35.ngrok-free.app/api/`
+const apiUrl = `https://66e6-2402-800-6205-efa9-b935-abad-b46a-2efc.ngrok-free.app/api/`
 
 export const getBloodPressure = async (id) => {
   const { data: apiRes } = await axios.get(

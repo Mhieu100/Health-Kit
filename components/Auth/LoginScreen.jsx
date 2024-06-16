@@ -15,7 +15,7 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useAuth } from "../../context/AuthContext";
 import * as authService from "../../services/auth.service";
-import LoadingScreen from "../LoadingScreen ";
+import LoadingScreen from "../customize/LoadingScreen ";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("admin@gmail.com");

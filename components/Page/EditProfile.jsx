@@ -88,7 +88,8 @@ const EditProfile = ({ navigation }) => {
         <Image
           style={styles.avatar}
           source={{
-            uri: `http://${IP_Address}:4000/uploads/${photo}`,
+            // uri: `http://${IP_Address}:4000/uploads/${photo}`,
+             uri: 'https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png'
           }}
         />
         <View style={{ marginVertical: 10}}>

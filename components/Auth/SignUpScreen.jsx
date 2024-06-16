@@ -14,7 +14,7 @@ import {
 } from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as authService from "../../services/auth.service";
-import LoadingScreen from "../LoadingScreen ";
+import LoadingScreen from "../customize/LoadingScreen ";
 
 const SignUpScreen = ({ navigation, route }) => {
   const [name, setName] = useState("Nguyen Toan");
