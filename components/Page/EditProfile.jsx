@@ -18,6 +18,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 
+import  IP_Address  from "../util/network";
+
 const EditProfile = ({ navigation }) => {
   const { user, login } = useAuth();
   const [photo, setPhoto] = useState(user.photo);
@@ -42,7 +44,7 @@ const EditProfile = ({ navigation }) => {
       name: result.assets[0].fileName,
     });
 
-    await fetch(`http://192.168.1.9:4000/v1/user/image/${user.id}`, {
+    await fetch(`http://${IP_Address}:4000/v1/user/image/${user.id}`, {
       method: "POST",
       body: formData,
       headers: {
@@ -51,7 +53,7 @@ const EditProfile = ({ navigation }) => {
     });
 
     await axios
-      .get(`http://192.168.1.9:4000/v1/user/image/${user.id}`)
+      .get(`http://${IP_Address}:4000/v1/user/image/${user.id}`)
       .then((response) => {
         setPhoto(response.data.user.photo);
       })
@@ -86,7 +88,7 @@ const EditProfile = ({ navigation }) => {
         <Image
           style={styles.avatar}
           source={{
-            uri: `http://192.168.1.9:4000/uploads/${photo}`,
+            uri: `http://${IP_Address}:4000/uploads/${photo}`,
           }}
         />
         <View style={{ marginVertical: 10}}>

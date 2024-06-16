@@ -1,4 +1,3 @@
-
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
@@ -7,13 +6,15 @@ import SettingScreen from "../components/App/SettingScreen";
 import HealthInfoScreen from "../components/App/HealthInfoScreen";
 import TrackerSceen from "../components/App/TrackerScreen";
 import ProfileScreen from "../components/App/ProfileScreen";
-import ChatBot from "../components/Chat_bot";
-import LoginFaceId from './../components/face_id/login';
-import FaceId from "./../components/face_id/login";
+import ChatBot from "../components/Chat/ChatBot";
+
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => (
   <Tab.Navigator
+    tabBarOptions={{
+      keyboardHidesTabBar: true,
+    }}
     screenOptions={{
       headerShown: false, // This will hide the header for all screens in this navigator
     }}
@@ -28,30 +29,12 @@ const AppStack = () => (
       }}
     />
     <Tab.Screen
-      name="Face_id"
-      component={FaceId}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="home" color={color} size={size} />
-        ),
-      }}
-    />
-    <Tab.Screen
       name="Tracker"
       // component={TrackerSceen}
       component={ChatBot}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialIcons name="analytics" color={color} size={size} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Chat"
-      component={ChatBot}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="comment" color={color} size={size} />
         ),
       }}
     />
@@ -73,7 +56,15 @@ const AppStack = () => (
         ),
       }}
     />
-
+    <Tab.Screen
+      name="Chat"
+      component={ChatBot}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="comment" color={color} size={size} />
+        ),
+      }}
+    />
     {/* <Tab.Screen
       name="Setting"
       component={SettingScreen}
@@ -86,4 +77,4 @@ const AppStack = () => (
   </Tab.Navigator>
 );
 
-export default AppStack
+export default AppStack;

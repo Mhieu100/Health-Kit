@@ -33,11 +33,8 @@ const SignUpScreen = ({ navigation, route }) => {
   const handleRegiter = () => {
     setIsLoading(true);
     if (!faceImageUri) {
-      Alert.alert("Error", "Please capture your face image.");
-      return;
+      Alert.alert("Error", "Please capture your face image."); setIsLoading(false);
     }
-
-    setIsLoading(true);
     const payload = {
       email: email,
       password: password,
@@ -46,13 +43,11 @@ const SignUpScreen = ({ navigation, route }) => {
       name: name,
     };
 
-    // Create FormData object
     const formData = new FormData();
     for (const key in payload) {
       formData.append(key, payload[key]);
     }
 
-    // Append the captured face image
     formData.append("face_image", {
       uri: faceImageUri,
       type: "image/jpeg",
@@ -61,23 +56,17 @@ const SignUpScreen = ({ navigation, route }) => {
 
     setTimeout(async () => {
       try {
-        const response = await axios.post(
-          "https://4d79-171-225-185-35.ngrok-free.app/api/face-id/register/", // Replace with your API endpoint
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        if (response.status === 201) {
-          Alert.alert("Success", "Registration successful!");
-          navigation.navigate("Login");
-        } else {
-          Alert.alert("Error", "Registration failed.");
-        }
+        await authService.register(formData);
+        navigation.navigate("Login");
       } catch (err) {
-        console.log(err);
+        // const {message} = err.response.data.errors.body[0];
+        // Alert.alert('Register Failed', message, [
+        //   {text: 'OK', onPress: () => console.log('OK Pressed')},
+        // ]);
+
+        Alert.alert("Rgister Failed", "Failed", [
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
       }
       setIsLoading(false);
     }, 1500);
@@ -87,12 +76,12 @@ const SignUpScreen = ({ navigation, route }) => {
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+
   useEffect(() => {
     if (route.params?.photoUri) {
       setFaceImageUri(route.params.photoUri);
     }
     if (faceImageUri) {
-
     }
   }, [route.params?.photoUri]);
 
@@ -213,10 +202,6 @@ const SignUpScreen = ({ navigation, route }) => {
             </View>
           )}
 
-          {/* {faceImageUri && (
-            <Image source={{ uri: faceImageUri }} style={styles.faceImage} />
-          )} */}
-
           <TouchableOpacity style={styles.button} onPress={handleRegiter}>
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
@@ -240,6 +225,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: wp("4%"),
     backgroundColor: "#fff",
+  },
+  faceIdButton: {
+    backgroundColor: "#01a5fc",
+    borderRadius: 25,
+    padding: wp("3%"),
+    alignItems: "center",
+    marginTop: hp("2.5%"),
+    width: "100%",
+  },
+  faceIdText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: wp("4%"),
+  },
+  faceImage: {
+    width: wp("30%"),
+    height: wp("30%"),
+    borderRadius: 150,
   },
   title: {
     fontSize: wp("6%"),

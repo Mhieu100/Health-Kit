@@ -55,9 +55,9 @@ const BMI = ({navigation}) => {
       gender: selectedValue,
       weight: weight,
       height: height,
-      dateCheck: selectedDate,
+      date_check: selectedDate.toString(),
       result: value,
-      user_id: user.id,
+      user: user.id,
       value: BMInumber.toFixed(2),
     };
     console.log(payload);

@@ -17,7 +17,7 @@ import { Dialog } from "@rneui/themed";
 import { Table, Rows, Col, TableWrapper } from "react-native-table-component";
 import { useAuth } from "../../context/AuthContext";
 
-const BloodSugar = ({navigation}) => {
+const BloodSugar = ({ navigation }) => {
   const conditions = [
     "Before Excercise",
     "After Excercise",
@@ -62,9 +62,9 @@ const BloodSugar = ({navigation}) => {
       fettle: condition,
       unit: unit,
       value: value,
-      dateCheck: selectedDate,
+      date_check: selectedDate.toString(),
       result: result,
-      user_id: user.id,
+      user: user.id,
     };
     console.log(payload);
     try {

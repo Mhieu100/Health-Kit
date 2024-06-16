@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 import * as healthyService from "../../services/healthy.service";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { formatDate } from "../util/date";
+
 
 const TrackerSceen = () => {
   const { user } = useAuth();
@@ -20,10 +20,13 @@ const TrackerSceen = () => {
       const fetchData = async () => {
         try {
           const bp = await healthyService.getBloodPressure(user.id);
+          console.log(bp);
           setBloodPressure(bp.info);
           const bs = await healthyService.getBloodSugar(user.id);
+          console.log(bs);
           setBloodSugar(bs.info);
           const bm = await healthyService.getBMI(user.id);
+          console.log(bm);
           setBMI(bm.info);
         } catch (error) {
           console.log(error);
@@ -32,10 +35,13 @@ const TrackerSceen = () => {
       fetchData();
     }, [user.id])
   );
+
+
   const sys = bloodPressure.map((item) => ({
     value: parseInt(item.sys, 10),
     dataPointText: item.sys,
   }));
+ 
   const dia = bloodPressure.map((item) => ({
     value: parseInt(item.dia, 10),
     dataPointText: item.dia,
@@ -47,13 +53,12 @@ const TrackerSceen = () => {
 
   const value = bloodSugar.map((item) => ({
     value: parseInt(item.value, 10),
-    label: formatDate(item.dateCheck),
+    label: item.date_check,
   }));
 
   const data = bmi.map((item) => ({ left: parseInt(item.height, 10), right: parseInt(item.weight, 10) }));
-console.log(value);
-  console.log(data);
   return (
+   
     <ScrollView>
       <View style={styles.container}>
         <Text
@@ -106,8 +111,6 @@ console.log(value);
           Blood Sugar
         </Text>
           <View style={{ marginRight: 50, marginBottom: 10 }}>
-
-         
         <BarChart
           width={250}
           data={value}
