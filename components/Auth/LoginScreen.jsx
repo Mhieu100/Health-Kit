@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -33,12 +34,15 @@ const LoginScreen = ({ navigation }) => {
       email,
       password,
     };
+
     setTimeout(async () => {
       try {
         const apiRes = await authService.login(payload);
         login(apiRes.user);
       } catch (err) {
-        console.log(err);
+        Alert.alert("Login Failed", "Invalid email or password", [
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
       }
       setIsLoading(false);
     }, 1500);
@@ -47,7 +51,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <>
       {isLoading ? (
-        <LoadingScreen /> 
+        <LoadingScreen />
       ) : (
         <View style={styles.container}>
           <Text style={styles.title}>Welcome to Healthy Care</Text>
@@ -95,7 +99,14 @@ const LoginScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-          
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("FaceId")}
+          >
+            <Text style={styles.buttonText}>Face ID</Text>
+          </TouchableOpacity>
+
           <Text style={styles.forgotPassword}>I forgot my password</Text>
 
           <View style={styles.signupContainer}>

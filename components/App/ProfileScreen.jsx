@@ -7,6 +7,7 @@ import { useCallback, useState } from "react";
 import LoadingScreen from "../LoadingScreen ";
 import { useFocusEffect } from "@react-navigation/native";
 import { formatDate, formatDatePost } from "../util/date";
+import  IP_Address  from "../util/network";
 
 const ProfileScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +57,7 @@ const ProfileScreen = ({ navigation }) => {
               <Image
                 style={styles.avatar}
                 source={{
-                  uri: `http://192.168.1.9:4000/uploads/${user.photo}`,
+                  uri: `http://${IP_Address}:4000/uploads/${user.photo}`,
                 }}
               />
             </View>
@@ -111,7 +112,7 @@ const ProfileScreen = ({ navigation }) => {
                   Pulse : {bloodPressure[0].pul} BPM
                 </Text>
                 <Text style={styles.statsCategory}>
-                  Date : {formatDatePost(bloodPressure[0].dateCheck)}
+                  Date : {bloodPressure[0].date_check}
                 </Text>
                 <Text style={styles.result}>
                   {bloodPressure[0].result}
@@ -132,7 +133,7 @@ const ProfileScreen = ({ navigation }) => {
                   Conditon : {bloodSugar[0].fettle}
                 </Text>
                 <Text style={styles.statsCategory}>
-                  Date : {formatDatePost(bloodSugar[0].dateCheck)}
+                  Date : {bloodSugar[0].date_check}
                 </Text>
                 <Text style={styles.result}>
                   {bloodSugar[0].result}
@@ -150,7 +151,7 @@ const ProfileScreen = ({ navigation }) => {
                   Height : {bmi[0].height} cm
                 </Text>
                 <Text style={styles.statsCategory}>
-                  Date : {formatDatePost(bmi[0].dateCheck)}
+                  Date : {bmi[0].date_check}
                 </Text>
                 <Text style={styles.result}>{bmi[0].result}</Text>
               </View>

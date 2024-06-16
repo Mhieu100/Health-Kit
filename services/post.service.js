@@ -1,6 +1,6 @@
 import axios from "axios";
-
-const apiUrl = "http://192.168.1.9:4000";
+import IP_Address from "../components/util/network"
+const apiUrl = `http://${IP_Address}:4000`;
 
 export const getAllPost = async () => {
     const { data: apiRes } = await axios.get(

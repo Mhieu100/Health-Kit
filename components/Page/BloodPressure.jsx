@@ -28,10 +28,12 @@ const BloodPressure = ({ navigation }) => {
   const [systolic, setSystolic] = useState(20);
   const [diastolic, setDiastolic] = useState(20);
   const [pulse, setPulse] = useState(20);
-  const [value, setValue] = useState({result: "", detail: ""});
+  const [value, setValue] = useState({ result: "", detail: "" });
 
   const { user } = useAuth();
 
+  //selectedDate = new Date(selectedDate.replace(/\//g, '-')).toISOString();
+ 
   const tableTitle = ["Systolic", "Diastolic", "Pulse", "Result", "Date Time"];
   const tableData = [
     [systolic + ".00 mmHg"],
@@ -59,9 +61,9 @@ const BloodPressure = ({ navigation }) => {
       sys: systolic,
       dia: diastolic,
       pul: pulse,
-      dateCheck: selectedDate,
+      date_check: selectedDate.toString(),
       result: value.result,
-      user_id: user.id,
+      user: user.id,
     };
     console.log(payload);
     try {
@@ -69,6 +71,7 @@ const BloodPressure = ({ navigation }) => {
       navigation.navigate("Home");
     } catch (err) {
       console.log(err);
+      navigation.navigate("Home");
     }
   };
 
@@ -210,6 +213,9 @@ const BloodPressure = ({ navigation }) => {
               />
             </TableWrapper>
           </Table>
+        </View>
+        <View>
+          <Text> {value.detail}</Text>
         </View>
         <View style={{ marginTop: 10 }}>
           <Button

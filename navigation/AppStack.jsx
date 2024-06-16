@@ -1,4 +1,3 @@
-
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
@@ -7,14 +6,19 @@ import SettingScreen from "../components/App/SettingScreen";
 import HealthInfoScreen from "../components/App/HealthInfoScreen";
 import TrackerSceen from "../components/App/TrackerScreen";
 import ProfileScreen from "../components/App/ProfileScreen";
+import ChatBot from "../components/Chat/ChatBot";
 
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => (
   <Tab.Navigator
-  screenOptions={{
-    headerShown: false, // This will hide the header for all screens in this navigator
-  }}>
+    tabBarOptions={{
+      keyboardHidesTabBar: true,
+    }}
+    screenOptions={{
+      headerShown: false, // This will hide the header for all screens in this navigator
+    }}
+  >
     <Tab.Screen
       name="Home"
       component={HomeScreen}
@@ -23,8 +27,8 @@ const AppStack = () => (
           <MaterialIcons name="home" color={color} size={size} />
         ),
       }}
-    />  
-     <Tab.Screen
+    />
+    <Tab.Screen
       name="Tracker"
       component={TrackerSceen}
       options={{
@@ -33,7 +37,7 @@ const AppStack = () => (
         ),
       }}
     />
-     <Tab.Screen
+    <Tab.Screen
       name="Health Info"
       component={HealthInfoScreen}
       options={{
@@ -42,12 +46,21 @@ const AppStack = () => (
         ),
       }}
     />
-     <Tab.Screen
+    <Tab.Screen
       name="Profile"
       component={ProfileScreen}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialIcons name="person" color={color} size={size} />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Chat"
+      component={ChatBot}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="comment" color={color} size={size} />
         ),
       }}
     />
@@ -63,4 +76,4 @@ const AppStack = () => (
   </Tab.Navigator>
 );
 
-export default AppStack
+export default AppStack;

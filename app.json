@@ -1,6 +1,16 @@
 {
   "expo": {
     "name": "Health-Kit",
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ]
+    ],
     "slug": "Health-Kit",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,10 +32,19 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.HealthKit"
+      "package": "com.anonymous.HealthKit",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "05d873d4-95f5-426c-8b14-8336cc6c0919"
+      }
     }
   }
 }

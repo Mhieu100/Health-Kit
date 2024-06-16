@@ -1,6 +1,7 @@
 import { Icon } from "@rneui/base";
 import { Button, Card, Text } from "@rneui/themed";
 import { ScrollView, View } from "react-native";
+import CommonSpeedDial from "../CommonSpeedDial";
 
 const features = [
   {
@@ -28,46 +29,48 @@ const features = [
 ];
 
 const HomeSceen = ({ navigation }) => {
-
   return (
-    <ScrollView style={{ backgroundColor: "#ECF0F3" }}>
-      {features.map((feature, index) => (
-        <View style={feature.style} key={index}>
-          <Card>
-            <Card.Title>{feature.title}</Card.Title>
-            <Card.Divider />
-            <Card.Image
-              style={{ padding: 0 }}
-              source={{
-                uri: `${feature.uri}`,
-              }}
-            />
-            <Text style={{ marginBottom: 10, marginTop: 10 }}>
-              {feature.description}
-            </Text>
-            <Button
-              onPress={() => {
-                navigation.navigate(feature.navigate);
-              }}
-              icon={
-                <Icon
-                  name="calculate"
-                  color="#ffffff"
-                  iconStyle={{ marginRight: 10 }}
-                />
-              }
-              buttonStyle={{
-                borderRadius: 0,
-                marginLeft: 0,
-                marginRight: 0,
-                marginBottom: 0,
-              }}
-              title="Health Check"
-            />
-          </Card>
-        </View>
-      ))}
-    </ScrollView>
+    <>
+      <ScrollView style={{ backgroundColor: "#ECF0F3" }}>
+        {features.map((feature, index) => (
+          <View style={feature.style} key={index}>
+            <Card>
+              <Card.Title>{feature.title}</Card.Title>
+              <Card.Divider />
+              <Card.Image
+                style={{ padding: 0 }}
+                source={{
+                  uri: `${feature.uri}`,
+                }}
+              />
+              <Text style={{ marginBottom: 10, marginTop: 10 }}>
+                {feature.description}
+              </Text>
+              <Button
+                onPress={() => {
+                  navigation.navigate(feature.navigate);
+                }}
+                icon={
+                  <Icon
+                    name="calculate"
+                    color="#ffffff"
+                    iconStyle={{ marginRight: 10 }}
+                  />
+                }
+                buttonStyle={{
+                  borderRadius: 0,
+                  marginLeft: 0,
+                  marginRight: 0,
+                  marginBottom: 0,
+                }}
+                title="Health Check"
+              />
+            </Card>
+          </View>
+        ))}
+      </ScrollView>
+      {/* <CommonSpeedDial  navigation={navigation}/> */}
+    </>
   );
 };
 export default HomeSceen;

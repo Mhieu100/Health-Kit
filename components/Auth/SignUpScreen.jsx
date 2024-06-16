@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -15,7 +16,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import * as authService from "../../services/auth.service";
 import LoadingScreen from "../LoadingScreen ";
 
-const SignUpScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation, route }) => {
   const [name, setName] = useState("Nguyen Toan");
   const [email, setEmail] = useState("toancong@gmail.com");
   const [city, setCity] = useState("Ha Noi");
@@ -23,9 +24,13 @@ const SignUpScreen = ({ navigation }) => {
   const [password, setPassword] = useState("20112003");
   const [isLoading, setIsLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [faceImageUri, setFaceImageUri] = useState("");
 
   const handleRegiter = () => {
     setIsLoading(true);
+    if (!faceImageUri) {
+      Alert.alert("Error", "Please capture your face image."); setIsLoading(false);
+    }
     const payload = {
       email: email,
       password: password,
@@ -33,12 +38,31 @@ const SignUpScreen = ({ navigation }) => {
       country: country,
       name: name,
     };
+
+    const formData = new FormData();
+    for (const key in payload) {
+      formData.append(key, payload[key]);
+    }
+
+    formData.append("face_image", {
+      uri: faceImageUri,
+      type: "image/jpeg",
+      name: "faceImage.jpg",
+    });
+
     setTimeout(async () => {
       try {
-        await authService.register(payload);
+        await authService.register(formData);
         navigation.navigate("Login");
       } catch (err) {
-        console.log(err);
+        // const {message} = err.response.data.errors.body[0];
+        // Alert.alert('Register Failed', message, [
+        //   {text: 'OK', onPress: () => console.log('OK Pressed')},
+        // ]);
+
+        Alert.alert("Rgister Failed", "Failed", [
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
       }
       setIsLoading(false);
     }, 1500);
@@ -48,18 +72,30 @@ const SignUpScreen = ({ navigation }) => {
     setPasswordVisible(!passwordVisible);
   };
 
+  useEffect(() => {
+    if (route.params?.photoUri) {
+      setFaceImageUri(route.params.photoUri);
+    }
+    if (faceImageUri) {
+    }
+  }, [route.params?.photoUri]);
+
   return (
     <>
       {isLoading ? (
-        <LoadingScreen /> 
+        <LoadingScreen />
       ) : (
         <View style={styles.container}>
           <Text style={styles.title}>Welcome to Healthy Care</Text>
 
-          <Image
-            source={require("../../assets/images/logo.png")}
-            style={styles.logoIcon}
-          />
+          {!faceImageUri ? (
+            <Image
+              source={require("../../assets/images/logo.png")}
+              style={styles.logoIcon}
+            />
+          ) : (
+            <Image source={{ uri: faceImageUri }} style={styles.faceImage} />
+          )}
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -145,6 +181,22 @@ const SignUpScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
+          {!faceImageUri ? (
+            <View style={styles.inputContainer}>
+              <TouchableOpacity
+                style={styles.faceIdButton}
+                onPress={() => navigation.navigate("FaceId_SignUp")}
+              >
+                <Text style={styles.faceIdText}>Register with Face ID</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ color: "green" }}>Authenticated Face </Text>
+              <Ionicons name={"checkmark"} size={24} color="green" />
+            </View>
+          )}
+
           <TouchableOpacity style={styles.button} onPress={handleRegiter}>
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
@@ -168,6 +220,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: wp("4%"),
     backgroundColor: "#fff",
+  },
+  faceIdButton: {
+    backgroundColor: "#01a5fc",
+    borderRadius: 25,
+    padding: wp("3%"),
+    alignItems: "center",
+    marginTop: hp("2.5%"),
+    width: "100%",
+  },
+  faceIdText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: wp("4%"),
+  },
+  faceImage: {
+    width: wp("30%"),
+    height: wp("30%"),
+    borderRadius: 150,
   },
   title: {
     fontSize: wp("6%"),
