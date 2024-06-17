@@ -1,7 +1,7 @@
 import { Icon } from "@rneui/base";
 import { Button, Card, Text } from "@rneui/themed";
 import { ScrollView, View } from "react-native";
-import CommonSpeedDial from "../CommonSpeedDial";
+import CommonSpeedDial from "../customize/CommonSpeedDial";
 
 const features = [
   {

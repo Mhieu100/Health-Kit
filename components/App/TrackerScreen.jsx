@@ -9,7 +9,6 @@ import * as healthyService from "../../services/healthy.service";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-
 const TrackerSceen = () => {
   const { user } = useAuth();
   const [bloodPressure, setBloodPressure] = useState([]);
@@ -36,12 +35,11 @@ const TrackerSceen = () => {
     }, [user.id])
   );
 
-
   const sys = bloodPressure.map((item) => ({
     value: parseInt(item.sys, 10),
     dataPointText: item.sys,
   }));
- 
+
   const dia = bloodPressure.map((item) => ({
     value: parseInt(item.dia, 10),
     dataPointText: item.dia,
@@ -56,9 +54,11 @@ const TrackerSceen = () => {
     label: item.date_check,
   }));
 
-  const data = bmi.map((item) => ({ left: parseInt(item.height, 10), right: parseInt(item.weight, 10) }));
+  const data = bmi.map((item) => ({
+    left: parseInt(item.height, 10),
+    right: parseInt(item.weight, 10),
+  }));
   return (
-   
     <ScrollView>
       <View style={styles.container}>
         <Text
@@ -110,20 +110,20 @@ const TrackerSceen = () => {
         >
           Blood Sugar
         </Text>
-          <View style={{ marginRight: 50, marginBottom: 10 }}>
-        <BarChart
-          width={250}
-          data={value}
-          frontColor={"#177AD5"}
-          barWidth={40}
-          noOfSections={4}
-          backgroundColor={"#f2f2f2"}
-          barBorderRadius={4}
-          yAxisThickness={1}
-          xAxisThickness={1}
-          isAnimated
-        />
-         </View>
+        <View style={{ marginRight: 50, marginBottom: 10 }}>
+          <BarChart
+            width={250}
+            data={value}
+            frontColor={"#177AD5"}
+            barWidth={40}
+            noOfSections={4}
+            backgroundColor={"#f2f2f2"}
+            barBorderRadius={4}
+            yAxisThickness={1}
+            xAxisThickness={1}
+            isAnimated
+          />
+        </View>
       </View>
       <View style={styles.container}>
         <Text

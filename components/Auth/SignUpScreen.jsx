@@ -14,11 +14,12 @@ import {
 } from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as authService from "../../services/auth.service";
-import LoadingScreen from "../LoadingScreen ";
+// import LoadingScreen from "../LoadingScreen ";
 import axios from "axios";
 import { inlineStyles } from "react-native-svg";
 // import { green } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
-// Alert
+import LoadingScreen from './../customize/LoadingScreen ';
+Alert
 
 const SignUpScreen = ({ navigation, route }) => {
   const [name, setName] = useState("Nguyen Toan");

@@ -30,7 +30,7 @@ const OnboardingScreen = ({ navigation }) => {
         {
           backgroundColor: "#fff",
           image: <Image style={styles.imageOnboard} source={require("../../assets/images/onBoard-1.png")} />,
-          title: "Onboarding",
+          title: "Running",
           subtitle: "Done with React Native Onboarding Swiper",
         },
         {

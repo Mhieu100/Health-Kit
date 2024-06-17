@@ -1,31 +1,58 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
-import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  SafeAreaView,
+  StatusBar,
+} from "react-native";
+import { GiftedChat, InputToolbar, Send } from "react-native-gifted-chat";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import keywords from "../util/keywords";
+import CustomAvatar from "../customize/CustomAvatar";
 
-const customtInputToolbar = props => {
+const CustomInputToolbar = (props) => {
   return (
-    <InputToolbar
-      {...props}
-      containerStyle={{
-        backgroundColor: "white",
-        borderTopColor: "#E8E8E8",
-        borderTopWidth: 1,
-        padding: 8
-      }}
-    />
+    <InputToolbar {...props} containerStyle={styles.inputToolbarContainer} />
+  );
+};
+
+const CustomSendButton = (props) => {
+  return (
+    <Send {...props}>
+      <View style={{ justifyContent: "center", height: "100%", marginRight: 8 }}>
+        <Ionicons name="send-outline" size={24} color="black" />
+      </View>
+    </Send>
   );
 };
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+ 
   const API_KEY = "AIzaSyAOKXJTFDh7N6zzdUgBzEK0swghxM-xMqc";
+
+  useEffect(() => {
+    const welcomeMessage = {
+      _id: 1,
+      text: "Chào mừng bạn đến với Health Chat! Hãy hỏi tôi bất cứ điều gì về sức khỏe.",
+      createdAt: new Date(),
+      user: {
+        _id: 2,
+        name: "Health Bot",
+      },
+    };
+    setMessages([welcomeMessage]);
+  }, []);
 
   const handleSend = async (newMessages = []) => {
     try {
       // Set loading state to true
       setIsLoading(true);
+     
 
       // get the user's message
       const userMessage = newMessages[0];
@@ -35,67 +62,33 @@ const ChatBot = () => {
         GiftedChat.append(previousMessages, userMessage)
       );
 
-      const messageText = userMessage.text.toLowerCase();
-      const keywords = [
-        "sức khỏe",
-        "sức khỏe tổng quát",
-        "chế độ ăn uống lành mạnh",
-        "tập luyện thể thao",
-        "giảm cân",
-        "tăng cân",
-        "sức khỏe tinh thần",
-        "stress và cách giảm stress",
-        "ngủ ngon",
-        "vitamin và khoáng chất",
-        "bệnh tim mạch",
-        "bệnh tiểu đường",
-        "huyết áp",
-        "cholesterol",
-        "sức khỏe xương khớp",
-        "sức khỏe phụ nữ",
-        "sức khỏe nam giới",
-        "sức khỏe trẻ em",
-        "tiêm phòng",
-        "bệnh ung thư",
-        "dinh dưỡng",
-        "detox cơ thể",
-        "sức khỏe mắt",
-        "sức khỏe răng miệng",
-        "thể dục thể thao",
-        "yoga và thiền",
-        "sức khỏe đường ruột",
-        "sức khỏe hô hấp",
-        "kiểm tra sức khỏe định kỳ",
-        "béo phì",
-        "lối sống lành mạnh",
-      ];
+      const messageText = "bạn là bot chăm sóc sức khỏe. chỉ trả lời những câu hỏi liên quan đến sức khỏe. Câu hỏi: " + userMessage.text.toLowerCase();
 
-      if (!keywords.some((keyword) => messageText.includes(keyword))) {
-        // if message don't contain any keywords, respond
-        const botMessage = {
-          _id: new Date().getTime() + 1,
-          text: "I'm your health bot, ask me anything related to health",
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: "Health Bot",
-          },
-        };
-        setMessages((previousMessages) =>
-          GiftedChat.append(previousMessages, botMessage)
-        );
-        // Set loading state to false
-        setIsLoading(false);
-        return;
-      }
+      // if (!keywords.some((keyword) => messageText.includes(keyword))) {
+      //   // if message don't contain any keywords, respond
+      //   const botMessage = {
+      //     _id: new Date().getTime() + 1,
+      //     text: "I'm your health bot, ask me anything related to health",
+      //     createdAt: new Date(),
+      //     user: {
+      //       _id: 2,
+      //       name: "Health Bot",
+      //     },
+      //   };
+      //   setMessages((previousMessages) =>
+      //     GiftedChat.append(previousMessages, botMessage)
+      //   );
+      //   // Set loading state to false
+      //   setIsLoading(false);
+       
+      //   return;
+      // }
 
       const updatedChat = [
         {
           parts: [{ text: messageText }],
         },
       ];
-
-      
 
       // if message contains keywords, fetch data
       const response = await axios.post(
@@ -139,32 +132,19 @@ const ChatBot = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          backgroundColor: "#f5f5f5",
-          padding: 10,
-          alignItems: "center",
-          justifyContent: "center",
-          borderBottomWidth: 1,
-          marginBottom: 5,
-          marginTop: 40,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 32,
-            fontWeight: "bold",
-          }}
-        >
-          Health Bot
-        </Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Health Chat</Text>
+        <Text style={styles.headerSubtitle}>Ask me anything about health</Text>
       </View>
       <GiftedChat
         messages={messages}
         onSend={(newMessages) => handleSend(newMessages)}
         user={{ _id: 1 }}
-        renderInputToolbar={props => customtInputToolbar(props)}
+        renderInputToolbar={(props) => <CustomInputToolbar {...props} />}
+        renderSend={(props) => <CustomSendButton {...props} />}
+        renderAvatar={(props) => <CustomAvatar {...props} />}
       />
       {isLoading && (
         <View style={styles.loadingContainer}>
@@ -172,11 +152,26 @@ const ChatBot = () => {
           <Text>Loading...</Text>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    padding: 15,
+    backgroundColor: "#0099ff",
+    alignItems: "center",
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "white",
+    marginTop: 5,
+  },
   loadingContainer: {
     position: "absolute",
     top: "50%",

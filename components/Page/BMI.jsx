@@ -8,7 +8,7 @@ import {
 import * as healthyService from "../../services/healthy.service";
 import DatePicker from "react-native-modern-datepicker";
 import React, { useEffect, useState } from "react";
-import RadioButton from "../RadioButton";
+import RadioButton from "../customize/RadioButton";
 import { Button, Dialog } from "@rneui/themed";
 import {
   Table,

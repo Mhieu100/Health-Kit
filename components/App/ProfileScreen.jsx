@@ -4,7 +4,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import * as healthyService from "../../services/healthy.service";
 import { useAuth } from "../../context/AuthContext";
 import { useCallback, useState } from "react";
-import LoadingScreen from "../LoadingScreen ";
+import LoadingScreen from "../customize/LoadingScreen ";
 import { useFocusEffect } from "@react-navigation/native";
 import { formatDate, formatDatePost } from "../util/date";
 import  API_URL  from "../util/network";

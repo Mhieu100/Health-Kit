@@ -30,8 +30,8 @@ const AppStack = () => (
     />
     <Tab.Screen
       name="Tracker"
-      // component={TrackerSceen}
-      component={ChatBot}
+      component={TrackerSceen}
+      // component={ChatBot}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialIcons name="analytics" color={color} size={size} />
@@ -48,15 +48,6 @@ const AppStack = () => (
       }}
     />
     <Tab.Screen
-      name="Profile"
-      component={ProfileScreen}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="person" color={color} size={size} />
-        ),
-      }}
-    />
-    <Tab.Screen
       name="Chat"
       component={ChatBot}
       options={{
@@ -65,6 +56,16 @@ const AppStack = () => (
         ),
       }}
     />
+    <Tab.Screen
+      name="Profile"
+      component={ProfileScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="person" color={color} size={size} />
+        ),
+      }}
+    />
+
     {/* <Tab.Screen
       name="Setting"
       component={SettingScreen}
