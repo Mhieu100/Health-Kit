@@ -7,20 +7,24 @@ import { useCallback, useState } from "react";
 import LoadingScreen from "../LoadingScreen ";
 import { useFocusEffect } from "@react-navigation/native";
 import { formatDate, formatDatePost } from "../util/date";
-import  IP_Address  from "../util/network";
-
+import  API_URL  from "../util/network";
+import React, { useEffect } from "react";
 const ProfileScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   
+  const [imageUri, setImageUri] = useState(null);
+  const [error, setError] = useState(false);
   
   const { logout, user } = useAuth();
+
+  console.log("photo",user.photo)
 
   const handleLogout = () => {
     setIsLoading(true);
     setTimeout(() => {
       logout();
       setIsLoading(false);
-    }, 1500);
+    }, 500);
   };
 
   const [bloodPressure, setBloodPressure] = useState([]);
@@ -45,6 +49,23 @@ const ProfileScreen = ({ navigation }) => {
     }, [user.id])
   );
 
+  useEffect(() => {
+    if (user && user.photo) {
+      const initialUri = `${API_URL}${user.photo}`;
+      const checkImage = async () => {
+        try {
+          await Image.prefetch(initialUri);
+          setImageUri(initialUri);
+        } catch (e) {
+          setError(true);
+          setImageUri(`${user.photo}`);
+        }
+      };
+
+      checkImage();
+    }
+  }, [user, API_URL]);
+
   console.log(bloodPressure);
   return (
     <>
@@ -54,12 +75,15 @@ const ProfileScreen = ({ navigation }) => {
         <ScrollView style={styles.container}>
           <View style={styles.body}>
             <View style={styles.avatarContainer}>
-              <Image
-                style={styles.avatar}
-                source={{
-                  uri: `http://${IP_Address}:4000/uploads/${user.photo}`,
-                }}
-              />
+              {imageUri ? (
+                <Image
+                  style={styles.avatar}
+                  source={{ uri: imageUri }}
+                  onError={() => setError(true)}
+                />
+              ) : (
+                <Text style={styles.errorText}>Loading...</Text>
+              )}
             </View>
             <View style={styles.nameContainer}>
               <Text style={styles.name}>{user.name}</Text>
@@ -114,9 +138,7 @@ const ProfileScreen = ({ navigation }) => {
                 <Text style={styles.statsCategory}>
                   Date : {bloodPressure[0].date_check}
                 </Text>
-                <Text style={styles.result}>
-                  {bloodPressure[0].result}
-                </Text>
+                <Text style={styles.result}>{bloodPressure[0].result}</Text>
               </View>
             )}
 
@@ -135,9 +157,7 @@ const ProfileScreen = ({ navigation }) => {
                 <Text style={styles.statsCategory}>
                   Date : {bloodSugar[0].date_check}
                 </Text>
-                <Text style={styles.result}>
-                  {bloodSugar[0].result}
-                </Text>
+                <Text style={styles.result}>{bloodSugar[0].result}</Text>
               </View>
             )}
 

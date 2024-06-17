@@ -12,6 +12,7 @@ import * as FaceDetector from "expo-face-detector";
 import * as FileSystem from "expo-file-system";
 import axios from "axios"; // Import Axios
 import { useAuth } from "../../context/AuthContext";
+import API_URL from '../util/network';
 
 export default function FaceId() {
   const [type, setType] = useState(CameraType.front); // Default to front camera
@@ -76,7 +77,7 @@ export default function FaceId() {
       });
 
       const response = await axios.post(
-        "https://4d79-171-225-185-35.ngrok-free.app/api/face-id/face-auth/",
+        `${API_URL}/api/face-id/face-auth/`,
         formData,
         {
           headers: {

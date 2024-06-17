@@ -53,6 +53,11 @@ const SignUpScreen = ({ navigation, route }) => {
       type: "image/jpeg",
       name: "faceImage.jpg",
     });
+    formData.append("photo", {
+      uri: faceImageUri,
+      type: "image/jpeg",
+      name: "faceImage.jpg",
+    });
 
     setTimeout(async () => {
       try {
@@ -63,8 +68,8 @@ const SignUpScreen = ({ navigation, route }) => {
         // Alert.alert('Register Failed', message, [
         //   {text: 'OK', onPress: () => console.log('OK Pressed')},
         // ]);
-
-        Alert.alert("Rgister Failed", "Failed", [
+        console.log("err: ", err)
+        Alert.alert("Register Failed", "An error occurred while registering.", [
           { text: "OK", onPress: () => console.log("OK Pressed") },
         ]);
       }
@@ -174,7 +179,7 @@ const SignUpScreen = ({ navigation, route }) => {
               placeholder="Password"
               secureTextEntry={!passwordVisible}
             />
-            <TouchableOpacity
+            <TouchableOpacity 
               onPress={togglePasswordVisibility}
               style={styles.eyeIcon}
             >

@@ -3,18 +3,18 @@ import axios from "axios";
 // import IP_Address from "../components/util/network"
 // const apiUrl = `http://${IP_Address}:4000`;
 
-const apiUrl = `https://4d79-171-225-185-35.ngrok-free.app/api/`
+const apiUrl = `https://22fe-2402-800-6205-efa9-b935-abad-b46a-2efc.ngrok-free.app`;
 
 export const getBloodPressure = async (id) => {
   const { data: apiRes } = await axios.get(
-    `${apiUrl}bloodpressures/${id}/`
+    `${apiUrl}/api/bloodpressures/${id}/`
   );
   return apiRes;
 };
 
 export const getBMI = async (id) => {
   const { data: apiRes } = await axios.get(
-    `${apiUrl}bmis/${id}/`
+    `${apiUrl}/api/bmis/${id}/`
   );
   return apiRes;
 };
@@ -22,14 +22,14 @@ export const getBMI = async (id) => {
 
 export const getBloodSugar = async (id) => {
   const { data: apiRes } = await axios.get(
-    `${apiUrl}bloodsugars/${id}/`
+    `${apiUrl}/api/bloodsugars/${id}/`
   );
   return apiRes;
 };
 
 export const addBloodPressure = async (payload) => {
   const { data: apiRes } = await axios.post(
-    `${apiUrl}bloodpressures/`,
+    `${apiUrl}/api/bloodpressures/`,
     payload
   );
   return apiRes;
@@ -37,7 +37,7 @@ export const addBloodPressure = async (payload) => {
 
 export const addBMI = async (payload) => {
   const { data: apiRes } = await axios.post(
-    `${apiUrl}bmis/`,
+    `${apiUrl}/api/bmis/`,
     payload
   );
   return apiRes;
@@ -45,7 +45,7 @@ export const addBMI = async (payload) => {
 
 export const addBloodSugar = async (payload) => {
   const { data: apiRes } = await axios.post(
-    `${apiUrl}bloodsugars/`,
+    `${apiUrl}/api/bloodsugars/`,
     payload
   );
   return apiRes;

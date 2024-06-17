@@ -38,7 +38,9 @@ const LoginScreen = ({ navigation }) => {
     setTimeout(async () => {
       try {
         const apiRes = await authService.login(payload);
+        console.log("user-data: ",apiRes.user);
         login(apiRes.user);
+
       } catch (err) {
         Alert.alert("Login Failed", "Invalid email or password", [
           { text: "OK", onPress: () => console.log("OK Pressed") },

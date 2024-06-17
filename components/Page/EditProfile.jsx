@@ -22,13 +22,12 @@ import  IP_Address  from "../util/network";
 
 const EditProfile = ({ navigation }) => {
   const { user, login } = useAuth();
-  const [photo, setPhoto] = useState(user.photo);
+  const [photo, setPhoto] = useState();
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [city, setCity] = useState(user.city);
   const [country, setCountry] = useState(user.country);
   const [phone, setPhone] = useState(user.phone);
-  const formData = new FormData();
   const showImagePicker = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -38,44 +37,35 @@ const EditProfile = ({ navigation }) => {
     }
     const result = await ImagePicker.launchImageLibraryAsync();
 
-    formData.append("file", {
-      uri: result.assets[0].uri,
-      type: result.assets[0].mimeType,
-      name: result.assets[0].fileName,
-    });
+    setPhoto(result.assets[0].uri);
 
-    await fetch(`http://${IP_Address}:4000/v1/user/image/${user.id}`, {
-      method: "POST",
-      body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    await axios
-      .get(`http://${IP_Address}:4000/v1/user/image/${user.id}`)
-      .then((response) => {
-        setPhoto(response.data.user.photo);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   const handleSubmit = async () => {
-    const updateUser = {
-      name: name,
-      email: email,
-      city: city,
-      country: country,
-      phone: phone,
-      photo: photo,
-      token: user.token,
-      id: user.id,
-    };
+    console.log("photo: ", photo)
+     const formData = new FormData(); // Di chuyển vào bên trong handleSubmit
+     const updateUser = {
+       name: name,
+       email: email,
+       city: city,
+       country: country,
+       phone: phone,
+     };
+     for (const key in updateUser) {
+       formData.append(key, updateUser[key]);
+     }
+     formData.append("photo", {
+       uri: photo,
+       type: "image/jpeg", // Thiết lập đúng loại ở đây
+       name: "user.jpg", // Đặt tên mặc định nếu cần
+     });
     try {
-      await authService.editUser(user.id, updateUser, user.token);
-      login(updateUser);
+      for (const key in updateUser) {
+        formData.append(key, updateUser[key]);
+      }
+      console.log(formData)
+      user_updated = await authService.editUser(user.id, formData);
+      login(user_updated.user);
       navigation.navigate("Profile");
     } catch (err) {
       console.log(err);
@@ -85,16 +75,25 @@ const EditProfile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        <Image
-          style={styles.avatar}
-          source={{
-            uri: `http://${IP_Address}:4000/uploads/${photo}`,
-          }}
-        />
-        <View style={{ marginVertical: 10}}>
+        {!photo ? (
+          <Image
+            style={styles.avatar}
+            source={{
+              uri: `${API_URL}${user.photo}`,
+            }}
+          />
+        ) : (
+          <Image
+            style={styles.avatar}
+            source={{
+              uri: photo,
+            }}
+          />
+        )}
+        <View style={{ marginVertical: 10 }}>
+          {/* <Button title="Upload Avatar" /> */}
           <Button title="Upload Avatar" onPress={showImagePicker} />
         </View>
-        
       </View>
       <View style={styles.form}>
         <Text style={styles.label}>User Name</Text>

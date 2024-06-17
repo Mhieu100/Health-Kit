@@ -2,8 +2,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnboardingScreen from "../components/Auth/OnboardingScreen";
 import LoginScreen from "../components/Auth/LoginScreen";
 import SignUpScreen from "../components/Auth/SignUpScreen";
-import FaceId from "../components/Face_ID/Login";
-import FaceId_SignUp from "../components/Face_ID/Register";
+// import FaceId from "../components/Face_ID/Login";
+import FaceId_SignUp from "../components/face_id/Register";
+import FaceId from './../components/face_id/Login';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = () => (
